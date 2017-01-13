@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CardHelper.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="UIManager.cs" />
     <Page Include="BureauBlack.xaml">
@@ -146,8 +147,8 @@
     <Resource Include="images\13b.png" />
     <Resource Include="images\13c.png" />
     <Resource Include="images\13d.png" />
-    <Resource Include="images\1d.png" />
-    <Resource Include="images\2d.png" />
+    <Resource Include="images\01d.png" />
+    <Resource Include="images\02d.png" />
     <Resource Include="images\back.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PokerRun"
         mc:Ignorable="d" ResizeMode="CanMinimize"
-        Title="扑克牌游戏 开发者：熊跃辉" Height="1000" Width="1000">
+        Title="湖南跑得快扑克牌游戏 开发者：熊跃辉" Height="1000" Width="1000">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,11 +16,12 @@
     <Grid>
         <Canvas  x:Name="herCanvas"    Width="500" Height="190" Margin="488,-5,4,784"/>
         <Canvas  x:Name="hisCanvas"   Width="190" Height="500" Margin="803,470,1,1"/>
-        <Canvas  x:Name="myCanvas"   Width="500" Height="190" Margin="4,775,488,4"/>
+        <Canvas  x:Name="myCanvas"   Width="500" Height="190" Margin="1,777,493,4"/>
         <Canvas x:Name="bottomCanvas" Margin="246,390,507,389" Height="190" />
         <Button x:Name="btnRestart"  Content="重新洗牌" HorizontalAlignment="Left" Margin="131,691,0,0" VerticalAlignment="Top" Width="95" Click="btnRestart_Click" RenderTransformOrigin="0.173,-5.474" Height="50"/>
         <Button x:Name="btnCall" Content="庄家叫牌" HorizontalAlignment="Left" Margin="347,692,0,0" VerticalAlignment="Top" Width="95" Height="50" Click="btnCall_Click"/>
         <Button x:Name="btnPlay" Content="我方出牌" HorizontalAlignment="Left" Margin="238,692,0,0" VerticalAlignment="Top" Width="95" Height="50" Click="btnPlay_Click"/>
+        <Label x:Name="labInfo" Content="" HorizontalAlignment="Left" Margin="467,714,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
 

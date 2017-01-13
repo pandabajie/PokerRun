@@ -33,7 +33,7 @@ namespace PokerRun
         ,"03c", "04c", "05c","06c","07c", "08c", "09c", "10c", "11c", "12c", "13c"
         ,"03b", "04b", "05b","06b","07b", "08b", "09b", "10b", "11b", "12b", "13b"
         ,"03a", "04a", "05a","06a","07a", "08a", "09a", "10a", "11a", "12a"
-        ,"1d","2d"};
+        ,"01d","02d"};
         List<string> arrNextCard = new List<string>();
         //3张底牌
         List<string> arrBottomCard = new List<string>();
@@ -98,11 +98,11 @@ namespace PokerRun
                 j++;
             } while (j < this.perCardCount);
             //桌面底牌UI
-            this.initbottomGrid();
+            this.initbottomGrid(true);
             //我方牌片UI
             this.initMyGrid();
-            this.initHisGrid();
-            this.initHerGrid();
+            this.initHisGrid(false);
+            this.initHerGrid(false);
 
 
             //Console.WriteLine("--------------------------------");
@@ -182,7 +182,7 @@ namespace PokerRun
             ,"03c", "04c", "05c","06c","07c", "08c", "09c", "10c", "11c", "12c", "13c"
             ,"03b", "04b", "05b","06b","07b", "08b", "09b", "10b", "11b", "12b", "13b"
             ,"03a", "04a", "05a","06a","07a", "08a", "09a", "10a", "11a", "12a"
-            ,"1d","2d"};
+            ,"01d","02d"};
             this.A.arrCard = new List<string> { };
             this.B.arrCard = new List<string> { };
             this.C.arrCard = new List<string> { };
@@ -199,6 +199,7 @@ namespace PokerRun
         /// <param name="e"></param>
         private void btnCall_Click(object sender, RoutedEventArgs e)
         {
+            this.labInfo.Content = "";
             this.bottomCanvas.Children.Clear();
             this.A.arrCard.AddRange(this.arrBottomCard);
             this.arrBottomCard.RemoveRange(0, this.bottomCardCount);
@@ -217,13 +218,12 @@ namespace PokerRun
         /// <param name="e"></param>
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
+            this.labInfo.Content = "";
             if (!this.isStartCard)
             {
-                MessageBox.Show("桌面还有底牌，您还不能出牌");
+                this.labInfo.Content = "桌面还有底牌，您还不能出牌";
                 return;
             }
-            //清除底牌
-            this.bottomCanvas.Children.Clear();
             //初始化
             this.arrBottomCard = new List<string> { };
             this.A.arrPlayCard = new List<string> { };
@@ -247,9 +247,34 @@ namespace PokerRun
                 }
             }
             //检查牌型
+            int playCardCount = this.A.arrPlayCard.Count;
+            if (playCardCount >= 2 && (A.arrPlayCard.Contains("01d") || A.arrPlayCard.Contains("02d")))
+            {
+                this.labInfo.Content = "您的牌型不正确s！";
+                return;
+            }
+            switch (playCardCount)
+            {
+                case 1:
+                    this.labInfo.Content = "您的牌型是单牌";
+                break;
+                case 2:
+                    if (CardHelper.isSame(this.A.arrPlayCard))
+                    {
+                        this.labInfo.Content = "您的牌型是一个对子";
+                    }
+                    else
+                    {
+                        this.labInfo.Content = "您的牌型不正确，请出对子！";
+                        return;
+                    }
+                break;
+                default:
+                break;
+            }
 
-
-
+            //清除底牌
+            this.bottomCanvas.Children.Clear();
             //删除打了出的牌面，需要倒序循环
             int c = this.A.arrPlayCardIndex.Count;
             for (int i = c-1; i >= 0; i--)
@@ -263,9 +288,8 @@ namespace PokerRun
                 this.arrBottomCard.Add(this.A.arrPlayCard[i]);
                 this.A.arrCard.RemoveAt(this.A.arrPlayCardIndex[i]);
             }
-            this.initbottomGrid();
-
-
+            this.initbottomGrid(false);
+            
             this.initMyGrid();
         }
 
@@ -295,7 +319,7 @@ namespace PokerRun
             }
         }
 
-        private void initHisGrid()
+        private void initHisGrid(bool isCover)
         {
             this.B.arrCard.Sort((x, y) => -x.CompareTo(y));
             RotateTransform rotateTransform = new RotateTransform(90);//90度
@@ -304,7 +328,15 @@ namespace PokerRun
                 Image img = new Image();
                 img.Height = this.cardHeight;
                 img.Width = this.cardWidth;
-                img.Source = new BitmapImage(new Uri("pack://application:,,,/images/" + this.B.arrCard[bi] + ".png"));
+                if (isCover)
+                {
+                    img.Source = new BitmapImage(new Uri("pack://application:,,,/images/back.png"));
+
+                }
+                else
+                {
+                    img.Source = new BitmapImage(new Uri("pack://application:,,,/images/" + this.B.arrCard[bi] + ".png"));
+                }
                 img.RenderTransform = rotateTransform;//图片控件旋转
                 Canvas.SetBottom(img, bi * 40);
                 Canvas.SetRight(img, -140);
@@ -312,7 +344,7 @@ namespace PokerRun
             }
         }
 
-        private void initHerGrid()
+        private void initHerGrid(bool isCover)
         {
             this.C.arrCard.Sort((x, y) => -x.CompareTo(y));
             for (int ci = 0; ci < this.C.arrCard.Count; ci++)
@@ -320,13 +352,21 @@ namespace PokerRun
                 Image img = new Image();
                 img.Height = this.cardHeight;
                 img.Width = this.cardWidth;
-                img.Source = new BitmapImage(new Uri("pack://application:,,,/images/" + this.C.arrCard[ci] + ".png"));
+                if (isCover)
+                {
+                    img.Source = new BitmapImage(new Uri("pack://application:,,,/images/back.png"));
+
+                }
+                else
+                {
+                    img.Source = new BitmapImage(new Uri("pack://application:,,,/images/" + this.C.arrCard[ci] + ".png"));
+                }
                 Canvas.SetRight(img, (ci * 40));
                 this.herCanvas.Children.Add(img);
             }
         }
 
-        private void initbottomGrid()
+        private void initbottomGrid(bool isCover)
         {
             this.C.arrCard.Sort((x, y) => -x.CompareTo(y));
             //底牌UI
@@ -335,7 +375,15 @@ namespace PokerRun
                 Image img = new Image();
                 img.Height = this.cardHeight;
                 img.Width = this.cardWidth;
-                img.Source = new BitmapImage(new Uri("pack://application:,,,/images/" + this.arrBottomCard[mi] + ".png"));
+                if (isCover)
+                {
+                    img.Source = new BitmapImage(new Uri("pack://application:,,,/images/back.png"));
+
+                }
+                else
+                {
+                    img.Source = new BitmapImage(new Uri("pack://application:,,,/images/" + this.arrBottomCard[mi] + ".png"));
+                }
                 Canvas.SetLeft(img, mi * 40);
                 this.bottomCanvas.Children.Add(img);
             }
