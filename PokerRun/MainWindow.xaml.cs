@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PokerRun
 {
@@ -20,23 +21,30 @@ namespace PokerRun
     /// </summary>
     public partial class MainWindow : Window
     {
+        //一副牌片的总数量
         int cardCount = 45;
+        //每人发的牌片数量
         int perCardCount = 14;
         //底牌数量
         int bottomCardCount = 3;
         //是否可以出牌
         bool isStartCard = false;
-
+        //牌的宽度
         int cardWidth = 140;
+        //牌的高度
         int cardHeight = 190;
+        //每张牌片的牌面值数组或者可以保存上一轮打下来的所有牌数组
         List<string> arrPreCard = new List<string> { "03d", "04d", "05d","06d","07d", "08d", "09d", "10d", "11d", "12d", "13d"
         ,"03c", "04c", "05c","06c","07c", "08c", "09c", "10c", "11c", "12c", "13c"
         ,"03b", "04b", "05b","06b","07b", "08b", "09b", "10b", "11b", "12b", "13b"
         ,"03a", "04a", "05a","06a","07a", "08a", "09a", "10a", "11a", "12a"
         ,"01d","02d"};
+        //洗完牌后的牌片数组
         List<string> arrNextCard = new List<string>();
-        //3张底牌
+        //底牌或者本轮打下来的牌
         List<string> arrBottomCard = new List<string>();
+        //本轮打下牌的牌型
+        int bottomCardType;
 
         Player A = new Player();
         Player B = new Player();
@@ -101,46 +109,8 @@ namespace PokerRun
             this.initbottomGrid(true);
             //我方牌片UI
             this.initMyGrid();
-            this.initHisGrid(false);
-            this.initHerGrid(false);
-
-
-            //Console.WriteLine("--------------------------------");
-            //foreach (String s in A.arrCard)
-            //{
-            //    Console.WriteLine(s);
-            //}
-            //Console.WriteLine("--------------------------------");
-            //foreach (String s in B.arrCard)
-            //{
-            //    Console.WriteLine(s);
-            //}
-            //Console.WriteLine("--------------------------------");
-            //A.playCardToken = this.token;
-            //foreach (String s in C.arrCard)
-            //{
-            //    Console.WriteLine(s);
-            //}
-
-            //Console.WriteLine("--------------------------------");
-            //if (A.playCardToken)
-            //{
-            //    Console.WriteLine("该我出了");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("不是我出");
-            //}
-            //Console.WriteLine("--------------------------------");
-            //A.playCardToken = false;
-            //if (A.playCardToken)
-            //{
-            //    Console.WriteLine("该我出了");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("不是我出");
-            //}
+            this.initHisGrid(true);
+            this.initHerGrid(true);
         }
 
         /// <summary>
@@ -224,6 +194,12 @@ namespace PokerRun
                 this.labInfo.Content = "桌面还有底牌，您还不能出牌";
                 return;
             }
+            //检查出牌令牌
+            if (this.A.playCardToken == false)
+            {
+                this.labInfo.Content = "还没轮到您出牌";
+                return;
+            }
             //初始化
             this.arrBottomCard = new List<string> { };
             this.A.arrPlayCard = new List<string> { };
@@ -247,37 +223,35 @@ namespace PokerRun
                 }
             }
             //检查牌型
-            int playCardCount = this.A.arrPlayCard.Count;
-            if (playCardCount >= 2 && (A.arrPlayCard.Contains("01d") || A.arrPlayCard.Contains("02d")))
+            if (this.A.arrPlayCard.Count >= 2 && (A.arrPlayCard.Contains("01d") || A.arrPlayCard.Contains("02d")))
             {
-                this.labInfo.Content = "您的牌型不正确s！";
+                this.labInfo.Content = "您的牌型不正确！";
                 return;
             }
-            switch (playCardCount)
+            //我的牌型
+            int myCardType = CardHelper.getCardType(this.A.arrPlayCard);
+            if (myCardType == CardHelper.WRONGCARD)
             {
-                case 1:
-                    this.labInfo.Content = "您的牌型是单牌";
-                break;
-                case 2:
-                    if (CardHelper.isSame(this.A.arrPlayCard))
-                    {
-                        this.labInfo.Content = "您的牌型是一个对子";
-                    }
-                    else
-                    {
-                        this.labInfo.Content = "您的牌型不正确，请出对子！";
-                        return;
-                    }
-                break;
-                default:
-                break;
+                this.labInfo.Content = "您的牌型不正确a！";
+                return;
+            }
+            //如果手里的牌多于三个，则只打三个相同单牌无效
+            if (this.A.arrCard.Count > 3 && myCardType == CardHelper.SANDANCARD)
+            {
+                this.labInfo.Content = "您的牌型不正确3>b！";
+                return;
+            }
+            //如果桌面中央有牌，且自己牌型和桌面牌型匹配的话，则比较大小,
+            if (this.bottomCanvas.Children.Count > 0 && myCardType == this.bottomCardType)
+            {
+
             }
 
             //清除底牌
             this.bottomCanvas.Children.Clear();
             //删除打了出的牌面，需要倒序循环
             int c = this.A.arrPlayCardIndex.Count;
-            for (int i = c-1; i >= 0; i--)
+            for (int i = c - 1; i >= 0; i--)
             {
                 var child = VisualTreeHelper.GetChild(this.myCanvas, this.A.arrPlayCardIndex[i]);
                 if (child is Image)
@@ -289,9 +263,91 @@ namespace PokerRun
                 this.A.arrCard.RemoveAt(this.A.arrPlayCardIndex[i]);
             }
             this.initbottomGrid(false);
-            
+            this.bottomCardType = myCardType;
             this.initMyGrid();
+            //本轮打完以后，令牌给下一家了
+            this.A.playCardToken = false;
+            this.B.playCardToken = true;
+            if (this.B.arrCard.Count > 0)
+            {
+                DispatcherTimer readDataTimer = new DispatcherTimer();
+                readDataTimer.Tick += new EventHandler(playerBCardAITime);
+                readDataTimer.Interval = new TimeSpan(0, 0, 0, 1);
+                readDataTimer.Start();
+            }
+             
+
         }
+
+        /// <summary>
+        /// 下家机器人
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void playerBCardAITime(object sender, EventArgs e)
+        {
+            if (this.B.arrCard.Count <= 0)
+            {
+                return;
+            }
+            DispatcherTimer readDataTimer = sender as DispatcherTimer;
+            readDataTimer.Stop();
+
+
+            Console.WriteLine(this.bottomCardType);
+            Console.WriteLine("他是我下家");
+            this.arrBottomCard = new List<string> { };
+            this.bottomCanvas.Children.Clear();
+            //随便出一张牌
+            Random rand = new Random();
+            int index = rand.Next(0, this.B.arrCard.Count);
+            Console.WriteLine("下家的牌长："+ this.B.arrCard.Count);
+            Console.WriteLine("下家的索引号：" + index);
+            this.arrBottomCard.Add(this.B.arrCard[index]);
+            this.B.arrCard.RemoveAt(index);
+            this.initHisGrid(true);
+            this.initbottomGrid(false);
+
+
+            //改变令牌
+            this.B.playCardToken = false;
+            this.C.playCardToken = true;
+
+            if (this.C.arrCard.Count > 0)
+            {
+                DispatcherTimer readDataTimer1 = new DispatcherTimer();
+                readDataTimer1.Tick += new EventHandler(playerCCardAITime);
+                readDataTimer1.Interval = new TimeSpan(0, 0, 0, 1);
+                readDataTimer1.Start();
+            }
+
+        }
+
+        /// <summary>
+        /// 对家机器人
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void playerCCardAITime(object sender, EventArgs e)
+        {
+            Console.WriteLine("她是我对家");
+            this.arrBottomCard = new List<string> { };
+            this.bottomCanvas.Children.Clear();
+            //随便出一张牌
+            Random rand = new Random();
+            int index = rand.Next(0, this.C.arrCard.Count);
+            this.arrBottomCard.Add(this.C.arrCard[index]);
+            this.C.arrCard.RemoveAt(index);
+            this.initHerGrid(true);
+            this.initbottomGrid(false);
+            //改变令牌
+            this.C.playCardToken = false;
+            this.A.playCardToken = true;
+
+            DispatcherTimer readDataTimer1 = sender as DispatcherTimer;
+            readDataTimer1.Stop();
+        }
+
 
         /// <summary>
         /// 重新整理我方牌局
@@ -317,11 +373,14 @@ namespace PokerRun
                 img.MouseLeftButtonDown += new MouseButtonEventHandler(cardOut_click);
                 this.myCanvas.Children.Add(img);
             }
+            //出牌令牌
+            this.A.playCardToken = true;
         }
 
         private void initHisGrid(bool isCover)
         {
             this.B.arrCard.Sort((x, y) => -x.CompareTo(y));
+            this.hisCanvas.Children.Clear();
             RotateTransform rotateTransform = new RotateTransform(90);//90度
             for (int bi = 0; bi < this.B.arrCard.Count; bi++)
             {
@@ -342,11 +401,14 @@ namespace PokerRun
                 Canvas.SetRight(img, -140);
                 this.hisCanvas.Children.Add(img);
             }
+            //出牌令牌
+            this.B.playCardToken = false;
         }
 
         private void initHerGrid(bool isCover)
         {
             this.C.arrCard.Sort((x, y) => -x.CompareTo(y));
+            this.herCanvas.Children.Clear();
             for (int ci = 0; ci < this.C.arrCard.Count; ci++)
             {
                 Image img = new Image();
@@ -364,6 +426,8 @@ namespace PokerRun
                 Canvas.SetRight(img, (ci * 40));
                 this.herCanvas.Children.Add(img);
             }
+            //出牌令牌
+            this.C.playCardToken = false;
         }
 
         private void initbottomGrid(bool isCover)
