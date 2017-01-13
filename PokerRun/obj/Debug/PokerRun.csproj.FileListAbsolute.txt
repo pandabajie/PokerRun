@@ -1,0 +1,15 @@
+F:\work\git\myself\PokerRun\PokerRun\bin\Debug\PokerRun.exe.config
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun.csprojResolveAssemblyReference.cache
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\BureauBlack.baml
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\MainWindow.g.cs
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\App.g.cs
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun_MarkupCompile.cache
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun_MarkupCompile.lref
+F:\work\git\myself\PokerRun\PokerRun\bin\Debug\PokerRun.exe
+F:\work\git\myself\PokerRun\PokerRun\bin\Debug\PokerRun.pdb
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\MainWindow.baml
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun.g.resources
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun.Properties.Resources.resources
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun.csproj.GenerateResource.Cache
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun.exe
+F:\work\git\myself\PokerRun\PokerRun\obj\Debug\PokerRun.pdb
