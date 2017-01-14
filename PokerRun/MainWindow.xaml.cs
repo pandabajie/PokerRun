@@ -35,7 +35,7 @@ namespace PokerRun
         ,"03c", "04c", "05c","06c","07c", "08c", "09c", "10c", "11c", "12c", "13c"
         ,"03b", "04b", "05b","06b","07b", "08b", "09b", "10b", "11b", "12b", "13b"
         ,"03a", "04a", "05a","06a","07a", "08a", "09a", "10a", "11a", "12a"
-        ,"01d","02d"};
+        ,"14d","15d"};
         //洗完牌后的牌片数组
         List<string> arrNextCard = new List<string>();
         //底牌或者本轮打下来的牌
@@ -148,7 +148,7 @@ namespace PokerRun
             ,"03c", "04c", "05c","06c","07c", "08c", "09c", "10c", "11c", "12c", "13c"
             ,"03b", "04b", "05b","06b","07b", "08b", "09b", "10b", "11b", "12b", "13b"
             ,"03a", "04a", "05a","06a","07a", "08a", "09a", "10a", "11a", "12a"
-            ,"01d","02d"};
+            ,"14d","15d"};
             this.A.arrCard = new List<string> { };
             this.B.arrCard = new List<string> { };
             this.C.arrCard = new List<string> { };
@@ -195,13 +195,16 @@ namespace PokerRun
                 }
             }
             //检查牌型
-            if (this.A.arrPlayCard.Count >= 2 && (A.arrPlayCard.Contains("01d") || A.arrPlayCard.Contains("02d")))
+            if (this.A.arrPlayCard.Count >= 2 && A.arrPlayCard.Contains("15d"))
             {
                 this.labInfo.Content = "您的牌型不正确！";
                 return;
             }
             //我的牌型
-            int myCardType = CardHelper.getCardType(this.A.arrPlayCard);
+            Dictionary<int, int> myCardTypeMaxValue = new Dictionary<int, int> { };
+            myCardTypeMaxValue =  CardHelper.getCardTypeMaxValue(this.A.arrPlayCard);
+            int myCardType = myCardTypeMaxValue.Keys.First();
+            int myCardMaxValue = myCardTypeMaxValue.Values.First();
             if (myCardType == CardHelper.WRONGCARD)
             {
                 this.labInfo.Content = "您的牌型不正确a！";
@@ -213,12 +216,13 @@ namespace PokerRun
                 this.labInfo.Content = "您的牌型不正确3>b！";
                 return;
             }
+
             //如果桌面中央有牌，且自己牌型和桌面牌型匹配的话，则比较大小,
             if (this.bottomCanvas.Children.Count > 0 && myCardType == this.bottomCardType)
             {
 
             }
-
+            Console.WriteLine("您的牌型是："+ myCardType + "牌的最大值是:"+ myCardMaxValue+"------------");
             //清除底牌
             this.bottomCanvas.Children.Clear();
             //删除打了出的牌面，需要倒序循环
@@ -266,7 +270,6 @@ namespace PokerRun
             readDataTimer.Stop();
 
 
-            Console.WriteLine(this.bottomCardType);
             Console.WriteLine("他是我下家");
             this.arrBottomCard = new List<string> { };
             this.bottomCanvas.Children.Clear();
