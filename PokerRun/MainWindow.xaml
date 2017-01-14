@@ -14,13 +14,16 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
+        <Image Source="images\background.jpg" Stretch="Fill"></Image>
         <Canvas  x:Name="herCanvas"    Width="500" Height="190" Margin="230,0,264,581"/>
-        <Canvas  x:Name="hisCanvas"   Width="190" Height="500" Margin="804,268,0,3"/>
-        <Canvas  x:Name="myCanvas"   Width="500" Height="190" Margin="0,581,494,0"/>
+        <Canvas  x:Name="hisCanvas"   Width="190" Height="500" Margin="794,268,10,3"/>
+        <Canvas  x:Name="myCanvas"   Width="500" Height="190" Margin="3,571,491,10"/>
         <Canvas x:Name="bottomCanvas" Margin="195,269,352,312" Height="190" />
-        <Button x:Name="btnRestart"  Content="重新洗牌" HorizontalAlignment="Left" Margin="426,507,0,0" VerticalAlignment="Top" Width="95" Click="btnRestart_Click" RenderTransformOrigin="0.173,-5.474" Height="50"/>
-        <Button x:Name="btnPlay" Content="我方出牌" HorizontalAlignment="Left" Margin="533,508,0,0" VerticalAlignment="Top" Width="95" Height="50" Click="btnPlay_Click"/>
-        <Label x:Name="labInfo" Content="请您出牌" HorizontalAlignment="Left" Margin="172,529,0,0" VerticalAlignment="Top"/>
+        <StackPanel Margin="262,481,335,230" Orientation="Horizontal">
+            <Label x:Name="labInfo" Content="请您出牌" HorizontalAlignment="Left"   VerticalAlignment="Top" Width="198"/>
+            <Button x:Name="btnRestart"  Content="重新洗牌" HorizontalAlignment="Left" VerticalAlignment="Top" Width="95" Click="btnRestart_Click"   Height="50"/>
+            <Button x:Name="btnPlay" Content="我方出牌" HorizontalAlignment="Left"   VerticalAlignment="Top" Width="95" Height="50" Click="btnPlay_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
 
