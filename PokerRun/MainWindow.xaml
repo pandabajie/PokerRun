@@ -14,14 +14,13 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Canvas  x:Name="herCanvas"    Width="500" Height="190" Margin="115,0,379,582"/>
-        <Canvas  x:Name="hisCanvas"   Width="190" Height="500" Margin="794,202,10,70"/>
-        <Canvas  x:Name="myCanvas"   Width="500" Height="190" Margin="2,580,492,2"/>
-        <Canvas x:Name="bottomCanvas" Margin="285,239,468,343" Height="190" />
+        <Canvas  x:Name="herCanvas"    Width="500" Height="190" Margin="230,0,264,581"/>
+        <Canvas  x:Name="hisCanvas"   Width="190" Height="500" Margin="804,268,0,3"/>
+        <Canvas  x:Name="myCanvas"   Width="500" Height="190" Margin="0,581,494,0"/>
+        <Canvas x:Name="bottomCanvas" Margin="195,269,352,312" Height="190" />
         <Button x:Name="btnRestart"  Content="重新洗牌" HorizontalAlignment="Left" Margin="426,507,0,0" VerticalAlignment="Top" Width="95" Click="btnRestart_Click" RenderTransformOrigin="0.173,-5.474" Height="50"/>
-        <Button x:Name="btnCall" Content="庄家叫牌" HorizontalAlignment="Left" Margin="642,508,0,0" VerticalAlignment="Top" Width="95" Height="50" Click="btnCall_Click"/>
         <Button x:Name="btnPlay" Content="我方出牌" HorizontalAlignment="Left" Margin="533,508,0,0" VerticalAlignment="Top" Width="95" Height="50" Click="btnPlay_Click"/>
-        <Label x:Name="labInfo" Content="" HorizontalAlignment="Left" Margin="467,714,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labInfo" Content="请您出牌" HorizontalAlignment="Left" Margin="172,529,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
 

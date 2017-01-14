@@ -24,17 +24,14 @@ namespace PokerRun
         //一副牌片的总数量
         int cardCount = 45;
         //每人发的牌片数量
-        int perCardCount = 14;
-        //底牌数量
-        int bottomCardCount = 3;
-        //是否可以出牌
-        bool isStartCard = false;
+        int perCardCount = 15;
         //牌的宽度
         int cardWidth = 140;
         //牌的高度
         int cardHeight = 190;
         //每张牌片的牌面值数组或者可以保存上一轮打下来的所有牌数组
-        List<string> arrPreCard = new List<string> { "03d", "04d", "05d","06d","07d", "08d", "09d", "10d", "11d", "12d", "13d"
+        List<string> arrPreCard = new List<string> {
+         "03d", "04d", "05d","06d","07d", "08d", "09d", "10d", "11d", "12d", "13d"
         ,"03c", "04c", "05c","06c","07c", "08c", "09c", "10c", "11c", "12c", "13c"
         ,"03b", "04b", "05b","06b","07b", "08b", "09b", "10b", "11b", "12b", "13b"
         ,"03a", "04a", "05a","06a","07a", "08a", "09a", "10a", "11a", "12a"
@@ -75,6 +72,7 @@ namespace PokerRun
             for (int i = 0; i < this.cardCount; i++)
             {
                 int index = rand.Next(0, this.arrPreCard.Count);
+                //重新组合
                 this.arrNextCard.Insert(i, this.arrPreCard[index]);
                 this.arrPreCard.RemoveAt(index);
             }
@@ -87,11 +85,11 @@ namespace PokerRun
         {
 
             //抽出3张底牌
-            for (int i = 0; i < this.bottomCardCount; i++)
-            {
-                this.arrBottomCard.Insert(i, this.arrNextCard[i]);
-                this.arrNextCard.RemoveAt(i);
-            }
+            //for (int i = 0; i < this.bottomCardCount; i++)
+            //{
+            //    this.arrBottomCard.Insert(i, this.arrNextCard[i]);
+            //    this.arrNextCard.RemoveAt(i);
+            //}
             int j = 0;
             //发牌
             this.A.arrCard = new List<string> { };
@@ -105,8 +103,6 @@ namespace PokerRun
                 arrNextCard.RemoveRange(0, 3);
                 j++;
             } while (j < this.perCardCount);
-            //桌面底牌UI
-            this.initbottomGrid(true);
             //我方牌片UI
             this.initMyGrid();
             this.initHisGrid(true);
@@ -158,28 +154,9 @@ namespace PokerRun
             this.C.arrCard = new List<string> { };
             this.arrBottomCard = new List<string> { };
             this.init();
-            this.btnCall.Visibility = Visibility.Visible;
-            this.isStartCard = false;
         }
 
-        /// <summary>
-        /// 庄家叫牌
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCall_Click(object sender, RoutedEventArgs e)
-        {
-            this.labInfo.Content = "";
-            this.bottomCanvas.Children.Clear();
-            this.A.arrCard.AddRange(this.arrBottomCard);
-            this.arrBottomCard.RemoveRange(0, this.bottomCardCount);
-            this.initMyGrid();
-            //隐藏“庄家叫牌”的按钮
-            Button btn = sender as Button;
-            btn.Visibility = Visibility.Hidden;
-            //做好可以出牌的标记
-            this.isStartCard = true;
-        }
+ 
 
         /// <summary>
         /// 开始出牌
@@ -189,11 +166,6 @@ namespace PokerRun
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
             this.labInfo.Content = "";
-            if (!this.isStartCard)
-            {
-                this.labInfo.Content = "桌面还有底牌，您还不能出牌";
-                return;
-            }
             //检查出牌令牌
             if (this.A.playCardToken == false)
             {
@@ -397,7 +369,7 @@ namespace PokerRun
                     img.Source = new BitmapImage(new Uri("pack://application:,,,/images/" + this.B.arrCard[bi] + ".png"));
                 }
                 img.RenderTransform = rotateTransform;//图片控件旋转
-                Canvas.SetBottom(img, bi * 40);
+                Canvas.SetBottom(img, (bi - 1) * 40);
                 Canvas.SetRight(img, -140);
                 this.hisCanvas.Children.Add(img);
             }
