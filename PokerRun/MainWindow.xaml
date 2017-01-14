@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PokerRun"
-        mc:Ignorable="d" ResizeMode="CanMinimize"
+        mc:Ignorable="d" ResizeMode="CanMinimize" Icon="images/fav.ico"
         Title="湖南跑得快扑克牌游戏 开发者：熊跃辉" Height="800" Width="1000">
     <Window.Resources>
         <ResourceDictionary>
